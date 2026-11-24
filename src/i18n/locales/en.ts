@@ -137,6 +137,7 @@ export const en = {
     disconnectOnDock: "Disconnect on dock",
     sleepOnDock: "Suspend host PC on dock",
     disablePicoLed: "Disable Pico LED",
+    ledBrightness: "Controller LED brightness",
     micSelect: "Microphone",
     speakerSelect: "Speaker / headset",
     enableWake: "Wake host on PS press",
@@ -171,6 +172,12 @@ export const en = {
       hz1000: "1000 Hz",
       realTime: "Real-time",
     },
+    ledBrightnessOptions: {
+      bright: "Bright",
+      medium: "Medium",
+      dim: "Dim",
+      off: "Off",
+    },
     audioDeviceSelectOptions: {
       auto: "Auto",
       builtin: "Built-in",
@@ -201,6 +208,8 @@ export const en = {
       sleepOnDock:
         "Send a USB System Sleep command to suspend the host PC when the controller is placed on a charger or dock.",
       disablePicoLed: "Turns off the always-on PICO LED. It will still blink when the controller battery is low.",
+      ledBrightness:
+        "Adjusts the brightness of the DualSense lightbar and player indicator LEDs (Bright, Medium, Dim, or Off).",
       micSelect: "0: Auto\n1: Built-in\n2: Headphone\n3: Disabled",
       speakerSelect: "0: Auto\n1: Built-in\n2: Headphone\n3: Disabled",
       enableWake: "Enable USB wake.\nNote: after enabling, USB will stay continuously connected.",

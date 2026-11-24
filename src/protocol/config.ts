@@ -1,5 +1,5 @@
 export const CONFIG_BODY_VERSION = 5;
-export const CONFIG_BODY_SIZE = 25;
+export const CONFIG_BODY_SIZE = 26;
 const MIN_CONFIG_BODY_SIZE = 24;
 export const FEATURE_REPORT_PAYLOAD_SIZE = 63;
 
@@ -9,6 +9,7 @@ export type AudioDeviceSelect = 0 | 1 | 2 | 3;
 export type StatusGpioMode = 0 | 1;
 export type PacketMode = 0 | 1;
 export type LockVolumeMode = 0 | 1 | 2;
+export type LedBrightnessMode = 0 | 1 | 2 | 3;
 
 export const STATUS_GPIO_DISABLED = 0xff;
 
@@ -47,6 +48,7 @@ export interface ConfigBody {
   packetMode: PacketMode;
   disconnectOnDock: boolean;
   sleepOnDock: boolean;
+  ledBrightness: LedBrightnessMode;
 }
 
 export interface ConfigValidationIssue {
@@ -75,6 +77,7 @@ export const DEFAULT_CONFIG: ConfigBody = {
   packetMode: 0,
   disconnectOnDock: false,
   sleepOnDock: false,
+  ledBrightness: 0,
 };
 
 export const POLLING_RATE_OPTIONS: Array<{
@@ -97,6 +100,15 @@ export const CONTROLLER_MODE_OPTIONS: Array<{
 
 export const AUDIO_DEVICE_SELECT_OPTIONS: Array<{
   value: AudioDeviceSelect;
+}> = [
+  { value: 0 },
+  { value: 1 },
+  { value: 2 },
+  { value: 3 },
+];
+
+export const LED_BRIGHTNESS_OPTIONS: Array<{
+  value: LedBrightnessMode;
 }> = [
   { value: 0 },
   { value: 1 },
@@ -168,6 +180,7 @@ export function encodeConfigBody(config: ConfigBody): Uint8Array<ArrayBuffer> {
   view.setUint8(22, config.packetMode);
   view.setUint8(23, config.disconnectOnDock ? 1 : 0);
   view.setUint8(24, config.sleepOnDock ? 1 : 0);
+  view.setUint8(25, config.ledBrightness);
   return bytes;
 }
 
@@ -238,6 +251,10 @@ export function validateConfig(config: ConfigBody): ConfigValidationIssue[] {
     issues.push({ field: "packetMode" });
   }
 
+  if (!Number.isInteger(config.ledBrightness) || config.ledBrightness < 0 || config.ledBrightness > 3) {
+    issues.push({ field: "ledBrightness" });
+  }
+
   return issues;
 }
 
@@ -266,6 +283,7 @@ export function normalizeConfig(config: ConfigBody): ConfigBody {
     packetMode: clampInteger(config.packetMode, 0, 1) as PacketMode,
     disconnectOnDock: Boolean(config.disconnectOnDock),
     sleepOnDock: Boolean(config.sleepOnDock),
+    ledBrightness: clampInteger(config.ledBrightness, 0, 3) as LedBrightnessMode,
   };
 }
 
@@ -305,7 +323,8 @@ export function configsEqual(left: ConfigBody | null, right: ConfigBody | null):
     left.statusGpioMode === right.statusGpioMode &&
     left.packetMode === right.packetMode &&
     left.disconnectOnDock === right.disconnectOnDock &&
-    left.sleepOnDock === right.sleepOnDock
+    left.sleepOnDock === right.sleepOnDock &&
+    left.ledBrightness === right.ledBrightness
   );
 }
 
@@ -361,7 +380,8 @@ function decodeAt(bytes: Uint8Array, offset: number): DecodedConfigCandidate | n
       statusGpioMode: view.getUint8(21) as StatusGpioMode,
       packetMode: view.getUint8(22) as PacketMode,
       disconnectOnDock: view.getUint8(23) === 1,
-      sleepOnDock: available >= CONFIG_BODY_SIZE ? view.getUint8(24) === 1 : false,
+      sleepOnDock: available >= 25 ? view.getUint8(24) === 1 : false,
+      ledBrightness: available >= 26 ? (view.getUint8(25) as LedBrightnessMode) : 0,
     },
   };
 }

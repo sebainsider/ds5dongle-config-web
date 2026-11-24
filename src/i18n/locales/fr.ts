@@ -138,6 +138,7 @@ export const fr = {
     disconnectOnDock: "Déconnexion sur dock",
     sleepOnDock: "Mettre le PC en veille sur dock",
     disablePicoLed: "Désactiver la LED Pico",
+    ledBrightness: "Luminosité des LED de la manette",
     micSelect: "Microphone",
     speakerSelect: "Haut-parleur / casque",
     enableWake: "Réveiller l'hôte avec PS",
@@ -172,6 +173,12 @@ export const fr = {
       hz1000: "1000 Hz",
       realTime: "Temps réel",
     },
+    ledBrightnessOptions: {
+      bright: "Forte",
+      medium: "Moyenne",
+      dim: "Faible",
+      off: "Éteinte",
+    },
     audioDeviceSelectOptions: {
       auto: "Auto",
       builtin: "Intégré",
@@ -203,6 +210,8 @@ export const fr = {
       sleepOnDock:
         "Met le PC hôte en veille lorsque la manette est posée sur un chargeur ou un dock.",
       disablePicoLed: "Éteint la LED PICO toujours allumée. Elle clignotera toujours quand la batterie de la manette est faible.",
+      ledBrightness:
+        "Règle la luminosité de la barre lumineuse et des indicateurs de joueur de la DualSense (Forte, Moyenne, Faible ou Éteinte).",
       micSelect: "0 : Auto\n1 : Intégré\n2 : Casque\n3 : Désactivé",
       speakerSelect: "0 : Auto\n1 : Intégré\n2 : Casque\n3 : Désactivé",
       enableWake: "Activer le réveil USB.\nRemarque : après activation, l'USB restera connecté en continu.",

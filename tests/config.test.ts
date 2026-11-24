@@ -20,19 +20,21 @@ const customized: ConfigBody = {
   packetMode: 1,
   disconnectOnDock: true,
   sleepOnDock: true,
+  ledBrightness: 2,
 };
 
 describe("config body wire layout", () => {
-  test("keeps version 5 and extends the body to 25 bytes", () => {
+  test("keeps version 5 and extends the body to 26 bytes", () => {
     const bytes = encodeConfigBody(customized);
 
     expect(CONFIG_BODY_VERSION).toBe(5);
-    expect(CONFIG_BODY_SIZE).toBe(25);
-    expect(bytes.length).toBe(25);
+    expect(CONFIG_BODY_SIZE).toBe(26);
+    expect(bytes.length).toBe(26);
     expect(bytes[0]).toBe(5);
     expect(bytes[22]).toBe(1); // packet_mode
     expect(bytes[23]).toBe(1); // disconnect_on_dock
     expect(bytes[24]).toBe(1); // sleep_on_dock
+    expect(bytes[25]).toBe(2); // led_brightness
   });
 
   test("round-trips the new packet fields, with and without a report id prefix", () => {
@@ -40,14 +42,17 @@ describe("config body wire layout", () => {
     expect(decodeConfigBody(new Uint8Array([0xf7, ...encodeConfigBody(customized)]))).toEqual(customized);
   });
 
-  test("decodes legacy 24-byte config bodies with sleepOnDock defaulting to false", () => {
-    const legacy = encodeConfigBody(customized).slice(0, 24);
-
-    expect(decodeConfigBody(legacy)).toEqual({ ...customized, sleepOnDock: false });
-    expect(decodeConfigBody(new Uint8Array([0xf7, ...legacy]))).toEqual({
+  test("decodes legacy 24-byte and 25-byte config bodies with trailing fields defaulting", () => {
+    const legacy24 = encodeConfigBody(customized).slice(0, 24);
+    expect(decodeConfigBody(legacy24)).toEqual({ ...customized, sleepOnDock: false, ledBrightness: 0 });
+    expect(decodeConfigBody(new Uint8Array([0xf7, ...legacy24]))).toEqual({
       ...customized,
       sleepOnDock: false,
+      ledBrightness: 0,
     });
+
+    const legacy25 = encodeConfigBody(customized).slice(0, 25);
+    expect(decodeConfigBody(legacy25)).toEqual({ ...customized, ledBrightness: 0 });
   });
 
   test("accepts both the 1000 Hz and the real-time polling modes", () => {
@@ -68,6 +73,11 @@ describe("config body wire layout", () => {
     expect(
       validateConfig({ ...DEFAULT_CONFIG, packetMode: 2 as ConfigBody["packetMode"] }).map((issue) => issue.field),
     ).toEqual(["packetMode"]);
+    expect(
+      validateConfig({ ...DEFAULT_CONFIG, ledBrightness: 4 as ConfigBody["ledBrightness"] }).map(
+        (issue) => issue.field,
+      ),
+    ).toEqual(["ledBrightness"]);
   });
 
   test("normalizes stray values back into range", () => {
@@ -76,11 +86,13 @@ describe("config body wire layout", () => {
       pollingRateMode: 9 as ConfigBody["pollingRateMode"],
       packetMode: 7 as ConfigBody["packetMode"],
       disconnectOnDock: 1 as unknown as boolean,
+      ledBrightness: 9 as ConfigBody["ledBrightness"],
     });
 
     expect(normalized.pollingRateMode).toBe(3);
     expect(normalized.packetMode).toBe(1);
     expect(normalized.disconnectOnDock).toBe(true);
+    expect(normalized.ledBrightness).toBe(3);
   });
 
   test("compares the new fields when detecting unsaved edits", () => {
@@ -88,6 +100,7 @@ describe("config body wire layout", () => {
     expect(configsEqual(DEFAULT_CONFIG, { ...DEFAULT_CONFIG, packetMode: 1 })).toBe(false);
     expect(configsEqual(DEFAULT_CONFIG, { ...DEFAULT_CONFIG, disconnectOnDock: true })).toBe(false);
     expect(configsEqual(DEFAULT_CONFIG, { ...DEFAULT_CONFIG, sleepOnDock: true })).toBe(false);
+    expect(configsEqual(DEFAULT_CONFIG, { ...DEFAULT_CONFIG, ledBrightness: 2 })).toBe(false);
   });
 });
 

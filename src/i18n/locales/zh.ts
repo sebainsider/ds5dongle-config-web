@@ -135,6 +135,7 @@ export const zh = {
     disconnectOnDock: "放上底座自动断开",
     sleepOnDock: "放上底座休眠主机",
     disablePicoLed: "禁用 Pico LED",
+    ledBrightness: "手柄指示灯亮度",
     micSelect: "麦克风",
     speakerSelect: "扬声器 / 耳机",
     enableWake: "按 PS 键唤醒主机",
@@ -168,6 +169,12 @@ export const zh = {
       hz1000: "1000 Hz",
       realTime: "实时",
     },
+    ledBrightnessOptions: {
+      bright: "明亮",
+      medium: "中等",
+      dim: "柔和",
+      off: "关闭",
+    },
     audioDeviceSelectOptions: {
       auto: "自动",
       builtin: "内置",
@@ -193,6 +200,7 @@ export const zh = {
       disconnectOnDock: "手柄放在充电底座上时断开蓝牙连接。",
       sleepOnDock: "手柄放在充电底座上时发送系统睡眠信号以休眠主机。",
       disablePicoLed: "关闭常亮的 PICO LED 灯。但是手柄低电量时仍会闪烁",
+      ledBrightness: "调节 DualSense 灯条和玩家指示灯的亮度（明亮、中等、柔和或关闭）。",
       micSelect: "0: 自动\n1: 内置\n2: 耳机\n3: 禁用",
       speakerSelect: "0: 自动\n1: 内置\n2: 耳机\n3: 禁用",
       enableWake: "开启 USB 唤醒。\n注意：开启后 USB 会一直保持常连状态",

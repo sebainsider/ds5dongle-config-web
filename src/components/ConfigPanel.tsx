@@ -7,6 +7,7 @@ import { AudioDeviceSelectControl } from "./config/AudioDeviceSelectControl";
 import { ControllerModeControl } from "./config/ControllerModeControl";
 import { FloatControl } from "./config/FloatControl";
 import { IntegerControl } from "./config/IntegerControl";
+import { LedBrightnessControl } from "./config/LedBrightnessControl";
 import { LockVolumeControl } from "./config/LockVolumeControl";
 import { PollingRateControl } from "./config/PollingRateControl";
 import { StatusGpioModeControl } from "./config/StatusGpioModeControl";
@@ -228,6 +229,13 @@ export function ConfigPanel({ bridge }: ConfigPanelProps) {
                 helpContent={t("config.help.disablePicoLed")}
                 disabled={controlsDisabled}
                 onChange={(value) => bridge.setDraftField("disablePicoLed", value)}
+              />
+              <LedBrightnessControl
+                label={t("config.ledBrightness")}
+                value={bridge.draft.ledBrightness}
+                helpContent={t("config.help.ledBrightness")}
+                disabled={controlsDisabled}
+                onChange={(value) => bridge.setDraftField("ledBrightness", value)}
               />
               <ToggleControl
                 label={t("config.enableWake")}
